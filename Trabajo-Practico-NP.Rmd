@@ -1,0 +1,70 @@
+---
+fontsize: 10pt 
+output: 
+  pdf_document: 
+    latex_engine: xelatex
+    keep_tex: true
+    toc: false
+    fig_caption: true  
+geometry: "left=3cm,right=3cm,top=3cm,bottom=3cm"
+titlepage: true 
+lang: es-ES  
+editor_options: 
+  chunk_output_type: console
+header-includes:
+  - \usepackage{caption}
+  - \captionsetup[table]{position=bottom,labelformat=default,labelsep=colon,name=Tabla}
+  - \captionsetup[figure]{labelformat=default,labelsep=colon,name=Figura}
+include-in-header:
+            - text: |
+                \usepackage{float}
+                \floatplacement{figure}{H}  
+---
+
+\begin{titlepage}
+    \centering
+    \makebox[\textwidth]{
+    \includegraphics[width=0.7\textwidth]{logo_facultad.png}
+    } \par 
+    \vspace{3cm}
+    {\scshape\Huge Trabajo Práctico Estadistica No Parametrica \par}
+    \vspace{3cm}
+    \vfill
+    {\Large Integrantes: \par}
+    {\Large Coveñas Zavaleta Cristian Nahuel\\
+            Cañizares María Inés\\
+            Roura Agustina \par}
+    \vfill
+    {\large Octubre 2025 \par}
+\end{titlepage}
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(fig.align="center")
+knitr::opts_chunk$set(out.width="65%")
+knitr::opts_chunk$set(out.height="45%")
+knitr::opts_chunk$set(message=FALSE)
+knitr::opts_chunk$set(warning = FALSE)
+knitr::opts_chunk$set(echo = FALSE)
+options(encoding = "UTF-8")
+``` 
+
+```{r}
+# Librerias a usar
+library(readxl)
+```
+
+```{r}
+# Cargamos los datos 
+datos <- read_excel("datostp.xlsx")
+View(datos)
+```
+
+# Introducción  
+
+La fibrosis hepática es un proceso en el que el hígado produce y acumula en exceso una sustancia llamada matriz extracelular, compuesta principalmente por colágeno. Este exceso genera una especie de “cicatriz interna” que altera el funcionamiento normal del órgano. Con el tiempo, la acumulación de colágeno y el ambiente inflamatorio que se forma pueden favorecer la aparición del carcinoma hepatocelular (HCC), la forma más común de cáncer de hígado.
+Las células estelares hepáticas (HSC) son las principales responsables de este proceso: cuando el hígado sufre algún daño, estas células se activan y comienzan a producir grandes cantidades de colágeno. Por eso, encontrar maneras de evitar o reducir esta activación es clave para prevenir o tratar la enfermedad hepática avanzada y el HCC.
+
+En este trabajo buscamos evaluar el potencial antifibrogénico de una combinación de dos compuestos, Metformina y Ácido Lipoico, en células estelares hepáticas cultivadas en laboratorio. El objetivo es determinar bajo qué condiciones experimentales (medio basal, activación con suero fetal al 10% o activación con los compuestos) se produce una mayor o menor cantidad de colágeno en la superficie de las células, lo que refleja directamente su nivel de actividad fibrogénica. Además, analizamos cómo estas condiciones afectan la viabilidad celular y el grado de activación de las HSC.
+
+Para ello, se trabajó con cuatro grupos de muestras independientes de células, cada uno sometido a un tipo distinto de medio de cultivo. La variable de interés mide la proporción de la superficie celular ocupada por gránulos de colágeno, lo que nos permite comparar de forma cuantitativa la respuesta entre grupos.
+Como no podemos asumir que los datos sigan una distribución normal y se busca una comparación de medianas entre varios grupos independientes, se optó por utilizar métodos estadísticos no paramétricos, que son más robustos y no requieren cumplir tantos supuestos. En particular, se aplicó la prueba de Kruskal–Wallis para detectar diferencias globales entre grupos, y pruebas de comparaciones múltiples para identificar cuáles tratamientos presentan diferencias significativas. Estos análisis nos permitirán evaluar con mayor precisión la eficacia de la combinación de Metformina y Ácido Lipoico como posible estrategia antifibrogénica.
