@@ -40,8 +40,8 @@ include-in-header:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(fig.align="center")
-knitr::opts_chunk$set(out.width="65%")
-knitr::opts_chunk$set(out.height="45%")
+knitr::opts_chunk$set(out.width="55%")
+knitr::opts_chunk$set(out.height="35%")
 knitr::opts_chunk$set(message=FALSE)
 knitr::opts_chunk$set(warning = FALSE)
 knitr::opts_chunk$set(echo = FALSE)
@@ -54,12 +54,16 @@ library(readxl)
 library(kableExtra)
 library(dplyr)
 library(ggplot2)
+library(dunn.test)
+library(nortest)
+library(coin)
+library(dunn.test)
+library(car)
 ```
 
 ```{r}
 # Cargamos los datos 
 datos <- read_excel("datostp.xlsx")
-View(datos)
 ```
 
 # Introducción  
@@ -101,11 +105,10 @@ El análisis descriptivo de la variable Superficie de Colágeno sobre Superficie
 
 Se generarán diagramas de caja para visualizar la distribución de la proporción de colágeno en cada grupo, permitiendo una comparación directa de la mediana, dispersión y asimetría entre los tratamientos.  
 
-```{r}
+```{r, fig.cap='Distribución de Superficie de Colágeno sobre Superficie Celular por tratamiento'}
 ggplot(datos, aes(x = tratamiento, y = SColSCel)) +
   geom_boxplot(fill = "skyblue", color = "black") +
   labs(
-    title = "Distribución de Superficie de Colágeno sobre Superficie Celular por tratamiento",
     x = "Tratamiento",
     y = "Superficie de Colágeno sobre Superficie Celular"
   ) +
@@ -114,22 +117,9 @@ ggplot(datos, aes(x = tratamiento, y = SColSCel)) +
 
 El análisis de la distribución de la proporción de superficie celular ocupada por colágeno muestra que las células tratadas con SFB 10% presentan la mediana más alta, seguida por SFB 1%. En contraste, los tratamientos combinados con metformina y ácido lipoico (SFB 1% + MA y SFB 10% + MA) presentan medianas más bajas y rangos intercuartílicos más estrechos, indicando que esta combinación reduce la acumulación de colágeno en comparación con SFB solo. Además, se observan algunos valores atípicos en todos los grupos, aunque la tendencia general indica que la presencia de metformina y ácido lipoico disminuye la proporción de colágeno.
 
-# ```{r}
-# ggplot(datos, aes(x = SColSCel)) +
-#   # Elige un número de 'bins' (barras) adecuado, por ejemplo, 25.
-#   geom_histogram(bins = 25, 
-#                  fill = "#2a9d8f", # Un color sólido
-#                  color = "black", 
-#                  alpha = 0.8) +
-#   labs(
-#     title = "Distribución Global de la Proporción de Colágeno (Todos los Tratamientos)",
-#     x = "Proporción de Colágeno en Superficie Celular (SColSCel)",
-#     y = "Frecuencia"
-#   ) +
-#   theme_bw()
-# ```
+\newpage
   
-```{r}
+```{r fig2, fig.cap='Distribución de la Proporción de Colágeno por Tratamiento'}
 ggplot(datos, aes(x = SColSCel, fill = tratamiento)) +
   geom_density(alpha = 0.6) +
   geom_vline(
@@ -141,7 +131,6 @@ ggplot(datos, aes(x = SColSCel, fill = tratamiento)) +
     linewidth = 0.8
   ) +
   labs(
-    title = "Distribución de la Proporción de Colágeno por Tratamiento",
     x = "Proporción de Colágeno en Superficie Celular (SColSCel)",
     y = "Densidad"
   ) +
@@ -152,22 +141,49 @@ ggplot(datos, aes(x = SColSCel, fill = tratamiento)) +
   theme(legend.position = "none")
 ```
 
-El análisis de los gráficos sugiere que la aplicación de un test de normalidad no resulta apropiada, dado que la variable respuesta se presenta como proporción y la forma de sus distribuciones para cada tratamiento muestra un claro alejamiento de la normalidad.
+La Figura 2 sugiere que la aplicación de un test de normalidad no resulta apropiada, dado que la variable respuesta se presenta como una proporción. Además, la forma de las distribuciones para cada tratamiento muestra un claro alejamiento de la normalidad, con asimetrías visibles y posibles acumulaciones de valores en los extremos.
+
+# Análisis estadístico
+
+Para evaluar la adecuación del supuesto de normalidad, se aplicó la prueba de Lilliefors de manera independiente a cada grupo de tratamiento. Los resultados mostraron valores de p superiores a 0.05 en todos los casos, por lo que no se rechazó la hipótesis nula de normalidad. No obstante, dado que la variable respuesta se expresa como proporción y que los gráficos de densidad evidencian distribuciones asimétricas, no resulta adecuado asumir normalidad. Por este motivo, se optó por emplear métodos no paramétricos para la comparación entre tratamientos.  
+
+```{r, results='hide'}
+datos %>%
+  group_by(tratamiento) %>%
+  summarise(
+    p_value = lillie.test(SColSCel)$p.value
+  ) 
+```
+
+Dado lo anterior, se aplicó la prueba no paramétrica de Kruskal–Wallis para evaluar si existían diferencias en la tendencia central de la proporción de colágeno en superficie celular (SColSCel) entre las distintas condiciones de tratamiento. Este enfoque se basa en los rangos de los datos y no requiere que las observaciones sigan una distribución normal, resultando apropiado para variables continuas acotadas entre 0 y 1.
+
+Se planteó como hipótesis principal que la distribución de colágeno (fibrosis) no sería equivalente entre los cuatro tratamientos aplicados a las Células Estelares Hepáticas (HSC). Se esperaba, en particular, que la condición de activación fibrogénica (SFB 10%) generara una mediana de SColSCel significativamente mayor que el control (SFB 1%), y que la combinación con Metformina y Ácido Lipoico (SFB 10%+MA) mostrara un efecto reductor sobre la mediana de fibrosis inducida.
 
 
-# Hacemos analisis estdadistico 
-
-Se planteó como hipótesis principal que la posición de la distribución de colágeno (fibrosis), medida como la proporción de colágeno en superficie celular (SColSCel), no sería la misma en las diferentes condiciones de tratamiento aplicadas a las Células Estelares Hepáticas (HSC). Específicamente, se esperaba que la condición de activación fibrogénica (SFB 10%) produjera una mediana de SColSCel significativamente mayor que el control (SFB 1%), y que el tratamiento con Metformina y Ácido Lipoico (SFB 10%+MA) demostrara un efecto reductor en la mediana de la fibrosis inducida.
-
-
-
-```{r}
-library(coin)
+```{r, results='hide'}
 kruskal_test(SColSCel ~ as.factor(tratamiento), data=datos)
 ```
 
-Para evaluar si existían diferencias en la tendencia central entre los grupos, se utilizó el Test de Kruskal-Wallis para comparar la mediana de la variable SColSCel en los cuatro grupos. Los resultados del contraste indicaron una diferencia altamente significativa entre las condiciones ($h = 37.936$, $p<0.0001$).
+Los resultados del test de Kruskal–Wallis indicaron una diferencia altamente significativa entre los grupos ($H = 37.936$, $p < 0.0001$). Esto permite rechazar la hipótesis nula de igualdad de medianas y confirma que las condiciones de cultivo y la inclusión de los compuestos antifibrogénicos modifican de manera significativa la tendencia central de la actividad fibrogénica de las HSC.
 
-Dado que la probabilidad asociada es extremadamente baja ($p < 0.05$), se rechaza la hipótesis nula de igualdad de medianas. En términos del problema, esto confirma que las condiciones de cultivo y la inclusión de los compuestos antifibrogénicos modifican de forma significativa la tendencia central de la actividad fibrogénica de las HSC, demostrando que no todas las condiciones resultan en la misma producción de colágeno.  
+Para identificar qué tratamientos se diferenciaban específicamente del control, se realizaron comparaciones múltiples mediante la prueba de Dunn con ajuste de Holm. El objetivo fue determinar cuáles condiciones generaban mayor o menor producción de colágeno en promedio.
 
+```{r, results='hide'}
+dunn.test(datos$SColSCel, datos$tratamiento, method="holm")
+```
+
+Los resultados mostraron diferencias estadísticamente significativas entre el control (SFB 1%) y los tratamientos SFB 10% y SFB 10%+MA (p < 0.05), mientras que no se detectaron diferencias significativas con el tratamiento SFB 1%+MA. Estos hallazgos sugieren que las condiciones asociadas a concentraciones más altas de SFB, especialmente combinadas con Metformina y Ácido Lipoico, inducen un aumento en la proporción de colágeno en superficie celular en comparación con el control, mientras que la combinación con SFB 1%+MA no genera cambios significativos.  
+
+### Análisis de variabilidad
+
+Para determinar cuáles condiciones generan mayor o menor variabilidad en la producción de colágeno, se evaluó la dispersión de la proporción de colágeno en superficie celular (SColSCel) entre los tratamientos. Dado que la variable respuesta es una proporción y no se cumple el supuesto de normalidad, se aplicó la prueba de Levene robusta basada en la mediana (Brown–Forsythe), la cual permite contrastar diferencias en la variabilidad de manera no paramétrica.  
+
+```{r, results='hide'}
+# Brown-Forsythe (Levene usando mediana)
+leveneTest(SColSCel ~ tratamiento, data = datos, center = median)
+```
+
+Los resultados de la prueba indicaron que existían diferencias significativas en la dispersión entre los grupos ($p < 0.0001$), lo que sugiere que existe evidencia muestral suficiente para afirmar que la variabilidad de SColSCel difiere en al menos uno de los cuatro tratamientos. Esto permite identificar cuáles condiciones generan una producción de colágeno más consistente y cuáles presentan mayor dispersión. 
+
+El análisis descriptivo mostró que SFB10%+MA presentó la menor variabilidad, indicando una producción de colágeno más consistente, mientras que SFB 10% mostró la mayor dispersión, reflejando mayor heterogeneidad en la respuesta de las células.  
 
