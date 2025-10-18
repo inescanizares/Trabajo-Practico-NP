@@ -187,3 +187,49 @@ Los resultados de la prueba indicaron que existían diferencias significativas e
 
 El análisis descriptivo mostró que SFB10%+MA presentó la menor variabilidad, indicando una producción de colágeno más consistente, mientras que SFB 10% mostró la mayor dispersión, reflejando mayor heterogeneidad en la respuesta de las células.  
 
+# Conclusiones (dos paginas a lo sumo)
+
+
+# Anexo
+
+## 1 Prueba de Normalidad para las muestras - Test de bondad de ajuste de Lilliefors
+
+- Hipótesis: $$H_0) \ X_i \sim Normal \ \ \text{vs} \ \ H_1) \ X_i \nsim Normal$$ 
+  Con $X_i$: muestra aleatoria del tratamiento $i$-esimo. $i = 1,4$
+  En particular se realizaron 4 test de normalidad para los distintos tratamientos.
+  
+- Estadística: $L_n = máx_x |S_n(X_i) - F_o(X_i)|$, mide la maxima diferencia entre la función de distribución acumulada empirica contra la funcion de distribución normal. 
+
+- Regla de decisión: $\text{Rechazo } H_0 \text{ si} \ L \ge L_{1 - \alpha}$
+  
+```{r}
+# Presentacion de una tabla con los 4 test realizados
+```
+
+## 2 Condiciones de mayor y menor producción en promedio - Test de Kruskal–Wallis
+
+- Hipótesis: 
+  
+- Estadística: 
+
+- Regla de decisión: 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
