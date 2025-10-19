@@ -1,5 +1,5 @@
 ---
-fontsize: 10pt 
+fontsize: 11pt 
 output: 
   pdf_document: 
     latex_engine: xelatex
@@ -46,6 +46,7 @@ knitr::opts_chunk$set(message=FALSE)
 knitr::opts_chunk$set(warning = FALSE)
 knitr::opts_chunk$set(echo = FALSE)
 options(encoding = "UTF-8")
+options(scipen = 999)
 ``` 
 
 ```{r}
@@ -59,6 +60,9 @@ library(nortest)
 library(coin)
 library(dunn.test)
 library(car)
+library(rstatix)
+library(knitr)
+
 ```
 
 ```{r}
@@ -68,17 +72,15 @@ datos <- read_excel("datostp.xlsx")
 
 # Introducción  
 
-La fibrosis hepática es un proceso en el que el hígado produce y acumula en exceso una sustancia llamada matriz extracelular, compuesta principalmente por colágeno. Este exceso genera una especie de “cicatriz interna” que altera el funcionamiento normal del órgano. Con el tiempo, la acumulación de colágeno y el ambiente inflamatorio que se forma pueden favorecer la aparición del carcinoma hepatocelular (HCC), la forma más común de cáncer de hígado.
-Las células estelares hepáticas (HSC) son las principales responsables de este proceso: cuando el hígado sufre algún daño, estas células se activan y comienzan a producir grandes cantidades de colágeno. Por eso, encontrar maneras de evitar o reducir esta activación es clave para prevenir o tratar la enfermedad hepática avanzada y el HCC.
+La fibrosis hepática es un proceso en el que el hígado produce y acumula en exceso una sustancia llamada matriz extracelular, compuesta principalmente por colágeno. Este exceso genera una especie de “cicatriz interna” que altera el funcionamiento normal del órgano. Con el tiempo, la acumulación de colágeno y el ambiente inflamatorio que se forma pueden favorecer la aparición del carcinoma hepatocelular (HCC), la forma más común de cáncer de hígado. Las células estelares hepáticas (HSC) son las principales responsables de este proceso: cuando el hígado sufre algún daño, estas células se activan y comienzan a producir grandes cantidades de colágeno. Por ello, encontrar maneras de evitar o reducir esta activación es clave para prevenir o tratar la enfermedad hepática avanzada y el HCC.
 
-En este trabajo buscamos evaluar el potencial antifibrogénico de una combinación de dos compuestos, Metformina y Ácido Lipoico, en células estelares hepáticas cultivadas en laboratorio. El objetivo es determinar bajo qué condiciones experimentales (medio basal, activación con suero fetal al 10% o activación con los compuestos) se produce una mayor o menor cantidad de colágeno en la superficie de las células, lo que refleja directamente su nivel de actividad fibrogénica. Además, analizamos cómo estas condiciones afectan la viabilidad celular y el grado de activación de las HSC.
+En este trabajo se buscó evaluar el potencial antifibrogénico de una combinación de dos compuestos, Metformina y Ácido Lipoico, en células estelares hepáticas cultivadas en laboratorio. El objetivo fue determinar bajo qué condiciones experimentales (control, activación con suero fetal al 10% o activación con los compuestos) se produce una mayor o menor cantidad de colágeno en la superficie de las células, lo que refleja directamente su nivel de actividad fibrogénica.
 
-Para ello, se trabajó con cuatro grupos de muestras independientes de células, cada uno sometido a un tipo distinto de medio de cultivo. La variable de interés mide la proporción de la superficie celular ocupada por gránulos de colágeno, lo que nos permite comparar de forma cuantitativa la respuesta entre grupos.
-Como no podemos asumir que los datos sigan una distribución normal y se busca una comparación de medianas entre varios grupos independientes, se optó por utilizar métodos estadísticos no paramétricos, que son más robustos y no requieren cumplir tantos supuestos. En particular, se aplicó la prueba de Kruskal–Wallis para detectar diferencias globales entre grupos, y pruebas de comparaciones múltiples para identificar cuáles tratamientos presentan diferencias significativas. Estos análisis nos permitirán evaluar con mayor precisión la eficacia de la combinación de Metformina y Ácido Lipoico como posible estrategia antifibrogénica.
-
+Para ello, se trabajó con cuatro grupos de muestras independientes de células, cada uno sometido a un tipo distinto de medio de cultivo. La variable de interés mide la proporción de la superficie celular ocupada por gránulos de colágeno, lo que permite comparar de forma cuantitativa la respuesta entre grupos.
 
 # Analisis descriptivo 
 
+En primer lugar, se procedió a realizar un análisis descriptivo de la variable Superficie de Colágeno sobre Superficie Celular (SColSCel) mediante el uso de una tabla descriptiva y un diagrama de caja (Figura 1), el cual mostró diferencias marcadas entre los tratamientos evaluados. 
 
 ```{r}
 datos %>%
@@ -96,15 +98,17 @@ datos %>%
   rename('Tratamiento' = tratamiento) %>%
   kable(
     caption = "Resumen descriptivo de Superficie de Colágeno Sobre Superficie Celular por tratamiento",
-    digits = 3
+    digits = 3,
+    align = 'c'
   ) %>%
   kable_styling(full_width = FALSE, position = "center")
 ```
 
-El análisis descriptivo de la variable Superficie de Colágeno sobre Superficie Celular (SColSCel) mostró diferencias marcadas entre los tratamientos evaluados. El tratamiento SFB 10% presentó los valores medios y medianos más elevados (0.22), acompañado de la mayor variabilidad, lo que indica una mayor formación de colágeno y mayor dispersión entre las observaciones. En cambio, los tratamientos SFB10%+MA y SFB10%+IMA mostraron los valores más bajos de colágeno (0.07 y 0.05, respectivamente) y menor variabilidad, sugiriendo un efecto inhibidor sobre la formación de colágeno al incorporar metformina y/o ácido lipoico. El tratamiento SFB 1% presentó valores intermedios (media = 0.12), inferiores a SFB 10% pero superiores a los tratamientos combinados. En conjunto, los resultados indican que la combinación de SFB con metformina y ácido lipoico reduce de manera consistente la superficie de colágeno sobre las células.  
+El tratamiento SFB 10% presentó los valores medios y medianos más elevados (0.22), acompañado de la mayor variabilidad, lo que podría indicar una mayor formación de colágeno y mayor variabilidad entre las mediciones. 
+Los tratamientos SFB1%+MA y SFB10%+MA mostraron los valores más bajos de colágeno (0.071 y 0.051, respectivamente) y menor variabilidad, sugiriendo un efecto inhibidor sobre la formación de colágeno al incorporar metformina y/o ácido lipoico. 
+El tratamiento SFB 1% (considerado como grupo control) presentó valores intermedios (media = 0.116, mediana = 0.098), inferiores a SFB 10% pero superiores a los tratamientos combinados.  
 
-Se generarán diagramas de caja para visualizar la distribución de la proporción de colágeno en cada grupo, permitiendo una comparación directa de la mediana, dispersión y asimetría entre los tratamientos.  
-
+ 
 ```{r, fig.cap='Distribución de Superficie de Colágeno sobre Superficie Celular por tratamiento'}
 ggplot(datos, aes(x = tratamiento, y = SColSCel)) +
   geom_boxplot(fill = "skyblue", color = "black") +
@@ -115,11 +119,11 @@ ggplot(datos, aes(x = tratamiento, y = SColSCel)) +
   theme_bw()
 ```
 
-El análisis de la distribución de la proporción de superficie celular ocupada por colágeno muestra que las células tratadas con SFB 10% presentan la mediana más alta, seguida por SFB 1%. En contraste, los tratamientos combinados con metformina y ácido lipoico (SFB 1% + MA y SFB 10% + MA) presentan medianas más bajas y rangos intercuartílicos más estrechos, indicando que esta combinación reduce la acumulación de colágeno en comparación con SFB solo. Además, se observan algunos valores atípicos en todos los grupos, aunque la tendencia general indica que la presencia de metformina y ácido lipoico disminuye la proporción de colágeno.
+Además, en la Figura 1 se observaron algunos valores atípicos en todos los grupos, aunque la tendencia general indicó que la presencia de Metformina y Ácido lipoico disminuye la proporción de colágeno en la superficie de las células.
 
-\newpage
-  
-```{r fig2, fig.cap='Distribución de la Proporción de Colágeno por Tratamiento'}
+Los resultados sugieren que la combinación de SFB con metformina y ácido lipoico (+MA) reduce de manera consistente la superficie de colágeno sobre las células.  
+
+```{r , fig.cap='Distribución de la Proporción de Colágeno por Tratamiento'}
 ggplot(datos, aes(x = SColSCel, fill = tratamiento)) +
   geom_density(alpha = 0.6) +
   geom_vline(
@@ -140,54 +144,182 @@ ggplot(datos, aes(x = SColSCel, fill = tratamiento)) +
   facet_wrap(~tratamiento) +
   theme(legend.position = "none")
 ```
+\newpage
 
-La Figura 2 sugiere que la aplicación de un test de normalidad no resulta apropiada, dado que la variable respuesta se presenta como una proporción. Además, la forma de las distribuciones para cada tratamiento muestra un claro alejamiento de la normalidad, con asimetrías visibles y posibles acumulaciones de valores en los extremos.
+La Figura 2 sugiere que la forma de las distribuciones para cada tratamiento muestra un alejamiento de la normalidad, con asimetrías visibles y posibles acumulaciones de valores en los extremos. Por esta razón y el hecho de que la variable en análisis es una proporción,se resalta que la  aplicación de un test de normalidad no es apropiada.  
+
 
 # Análisis estadístico
 
-Para evaluar la adecuación del supuesto de normalidad, se aplicó la prueba de Lilliefors de manera independiente a cada grupo de tratamiento. Los resultados mostraron valores de p superiores a 0.05 en todos los casos, por lo que no se rechazó la hipótesis nula de normalidad. No obstante, dado que la variable respuesta se expresa como proporción y que los gráficos de densidad evidencian distribuciones asimétricas, no resulta adecuado asumir normalidad. Por este motivo, se optó por emplear métodos no paramétricos para la comparación entre tratamientos.  
+Luego del análisis descriptivo, que permitió observar tendencias generales y posibles diferencias entre los tratamientos, se continuó con un análisis estadístico para comprobar si esas diferencias son significativas.
+Antes de ello, se evaluó si los datos cumplían las condiciones necesarias para aplicar pruebas tradicionales basadas en la normalidad.
 
-```{r, results='hide'}
-datos %>%
+Se evaluó si las observaciones siguen una distribución normal, para ello se aplicó la prueba de Lilliefors de manera independiente a cada grupo de tratamiento. Esta prueba compara la distribución empírica acumulada de los datos con la función de distribución normal.
+
+```{r}
+# 1. Ejecutar el código, calcular los valores p y guardar el resultado
+tabla_normalidad <- datos %>%
   group_by(tratamiento) %>%
   summarise(
-    p_value = lillie.test(SColSCel)$p.value
-  ) 
+    p_value = lillie.test(SColSCel)$p.value,
+    .groups = 'drop'
+  ) %>%
+  rename(
+    `Tratamiento` = tratamiento,
+    `P-Value` = p_value
+  )
+
+# 2. Generar la tabla con kable
+kable(
+  tabla_normalidad,
+  caption = "Prueba de Normalidad de Lilliefors por Grupo de Tratamiento",
+  digits = 4,
+  align = c('l', 'c')
+) 
 ```
 
-Dado lo anterior, se aplicó la prueba no paramétrica de Kruskal–Wallis para evaluar si existían diferencias en la tendencia central de la proporción de colágeno en superficie celular (SColSCel) entre las distintas condiciones de tratamiento. Este enfoque se basa en los rangos de los datos y no requiere que las observaciones sigan una distribución normal, resultando apropiado para variables continuas acotadas entre 0 y 1.
+Los resultados mostraron valores de p superiores a 0.05 en todos los tratamientos. Por lo tanto, se concluye con un nivel de significación del 5% que no hay evidencia muestral suficiente para decir que la Superficie de Colágeno sobre Superficie Celular (SColSCel) no sigue una distribución normal en cada tratamiento.
 
-Se planteó como hipótesis principal que la distribución de colágeno (fibrosis) no sería equivalente entre los cuatro tratamientos aplicados a las Células Estelares Hepáticas (HSC). Se esperaba, en particular, que la condición de activación fibrogénica (SFB 10%) generara una mediana de SColSCel significativamente mayor que el control (SFB 1%), y que la combinación con Metformina y Ácido Lipoico (SFB 10%+MA) mostrara un efecto reductor sobre la mediana de fibrosis inducida.
+Asimismo, se analizó la homogeneidad de varianzas (homocedasticidad) mediante la prueba de Levene. Los resultados indicaron que este supuesto no se cumplía, desaconsejando el uso de métodos paramétricos tradicionales.
 
+```{r}
+# 1. Ejecutar y guardar el test
+resultado_levene <- leveneTest(SColSCel ~ tratamiento, data = datos, center = median)
 
-```{r, results='hide'}
-kruskal_test(SColSCel ~ as.factor(tratamiento), data=datos)
+# 2. Extraer y crear el data frame
+tabla_levene <- data.frame(
+  `Estadístico F` = resultado_levene[1, "F value"],
+  `gl1` = resultado_levene[1, "Df"],
+  `gl2` = resultado_levene[2, "Df"],
+  `P-Value` = resultado_levene[1, "Pr(>F)"],
+  check.names = FALSE
+)
+
+# 3. Generar la tabla con kable
+kable(
+  tabla_levene,
+  caption = "Resultados de la Prueba de Levene",
+  digits = 4,
+  align = 'c'
+)
 ```
 
-Los resultados del test de Kruskal–Wallis indicaron una diferencia altamente significativa entre los grupos ($H = 37.936$, $p < 0.0001$). Esto permite rechazar la hipótesis nula de igualdad de medianas y confirma que las condiciones de cultivo y la inclusión de los compuestos antifibrogénicos modifican de manera significativa la tendencia central de la actividad fibrogénica de las HSC.
+Como se puede observar, este supuesto no se cumplió, lo cual no se sustenta la opción de continuar el análisis implementando métodos de análisis paramétricos.
+
+Además, dado que la variable respuesta se expresa como proporción y que los gráficos de densidad muestran distribuciones asimétricas, no resulta adecuado asumir normalidad ni homocedasticidad. Por esta razón, se optó por métodos estadísticos no paramétricos, que permiten comparar los tratamientos sin depender de estos supuestos.
+
+*Condiciones que generan mayor y menor producción de colágeno en promedio* 
+
+Se decidió aplicar la prueba de Kruskal–Wallis para evaluar diferencias entre los grupos, complementada con pruebas de comparaciones múltiples que permitieron identificar los tratamientos con diferencias significativas. Estos procedimientos brindan una evaluación más precisa de la eficacia potencial de la combinación de Metformina y Ácido Lipoico como estrategia antifibrogénica. 
+
+Se formuló como hipótesis principal que la proporción de colágeno mediano es la misma entre los cuatro tratamientos aplicados a las Células Estelares Hepáticas (HSC), esperando que alguna condición de activación fibrogénica presentara una mediana diferente a las demás.
+
+```{r}
+library(rstatix)
+library(knitr)
+library(dplyr) # Para la función select() y rename()
+
+# 1. Ejecutar el test y guardar el resultado
+resultado_kruskal <- kruskal_test(SColSCel ~ as.factor(tratamiento), data = datos)
+
+# 2. Preparar el data frame para la tabla
+tabla_final <- resultado_kruskal %>%
+  select(statistic, df, p) %>%
+  rename(
+    `Estadística` = statistic,
+    `G.L. (Grados de Libertad)` = df,
+    `P-Value` = p
+  )
+
+# 3. Generar la tabla con kable
+kable(
+  tabla_final,
+  caption = "Resultados de la Prueba de Kruskal-Wallis para SColSCel por Tratamiento",
+  digits = 4,
+  align = 'c'
+)
+
+```
+
+
+Los resultados del test de Kruskal–Wallis indicaron una diferencia significativa entre los grupos ($H = 37.936$, $p < 0.0001$). Esto permite rechazar la hipótesis nula de igualdad de medianas y confirma que las condiciones de cultivo y la inclusión de los compuestos antifibrogénicos modifican de manera significativa la tendencia central de la actividad fibrogénica de las HSC. 
 
 Para identificar qué tratamientos se diferenciaban específicamente del control, se realizaron comparaciones múltiples mediante la prueba de Dunn con ajuste de Holm. El objetivo fue determinar cuáles condiciones generaban mayor o menor producción de colágeno en promedio.
 
-```{r, results='hide'}
-dunn.test(datos$SColSCel, datos$tratamiento, method="holm")
+```{r}
+#dunn.test(datos$SColSCel, datos$tratamiento, method="holm")
+library(knitr)
+
+# Creación manual de un data frame con los resultados del control
+# Basado en tu salida: SFB 10%, SFB1%+MA, SFB10%+M
+comparaciones_control <- data.frame(
+  'Comparación' = c("SFB 1% vs SFB 10%", "SFB 1% vs SFB1%+MA", "SFB 1% vs SFB10%+M"),
+  `P-Value` = c(0.0010, 0.1344, 0.0039),
+  check.names = FALSE # Permite el uso de espacios y símbolos en nombres de columna
+)
+
+# Generar la tabla con kable
+kable(
+  comparaciones_control,
+  caption = "Comparaciones por Pares (Dunn-Holm) con el Grupo Control (SFB 1%)",
+  digits = 4,
+  align = 'c'
+)
 ```
 
-Los resultados mostraron diferencias estadísticamente significativas entre el control (SFB 1%) y los tratamientos SFB 10% y SFB 10%+MA (p < 0.05), mientras que no se detectaron diferencias significativas con el tratamiento SFB 1%+MA. Estos hallazgos sugieren que las condiciones asociadas a concentraciones más altas de SFB, especialmente combinadas con Metformina y Ácido Lipoico, inducen un aumento en la proporción de colágeno en superficie celular en comparación con el control, mientras que la combinación con SFB 1%+MA no genera cambios significativos.  
+Los resultados mostraron diferencias estadísticamente significativas entre el control (SFB 1%) y los tratamientos SFB 10% y SFB 10%+MA ($p < 0.05$), mientras que no se detectaron diferencias significativas con el tratamiento SFB 1%+MA. Estos hallazgos sugieren que las condiciones asociadas a concentraciones más altas de SFB, especialmente combinadas con Metformina y Ácido Lipoico, inducen un aumento en la proporción de colágeno en superficie celular en comparación con el control, mientras que la combinación con SFB 1%+MA no genera cambios significativos.  
 
-### Análisis de variabilidad
+*Condiciones que generan mayor o menor variabilidad en producción de colágeno* 
 
-Para determinar cuáles condiciones generan mayor o menor variabilidad en la producción de colágeno, se evaluó la dispersión de la proporción de colágeno en superficie celular (SColSCel) entre los tratamientos. Dado que la variable respuesta es una proporción y no se cumple el supuesto de normalidad, se aplicó la prueba de Levene robusta basada en la mediana (Brown–Forsythe), la cual permite contrastar diferencias en la variabilidad de manera no paramétrica.  
+Con el fin de identificar las condiciones que generan mayor o menor variabilidad en la producción de colágeno, se evaluó la dispersión de la proporción de colágeno en superficie celular (SColSCel) entre los tratamientos. Dado que la variable respuesta es una proporción y no se cumple el supuesto de normalidad, se aplicó la prueba de Levene robusta basada en la mediana (Brown–Forsythe), la cual permite contrastar diferencias en la variabilidad de manera no paramétrica.   
 
-```{r, results='hide'}
-# Brown-Forsythe (Levene usando mediana)
-leveneTest(SColSCel ~ tratamiento, data = datos, center = median)
+```{r}
+
+# 1. Ejecutar y guardar el test
+resultado_levene <- leveneTest(SColSCel ~ tratamiento, data = datos, center = median)
+
+# 2. Extraer y crear el data frame
+tabla_levene <- data.frame(
+  `Estadístico F` = resultado_levene[1, "F value"],
+  `gl1` = resultado_levene[1, "Df"],
+  `gl2` = resultado_levene[2, "Df"],
+  `P-Value` = resultado_levene[1, "Pr(>F)"],
+  check.names = FALSE
+)
+
+# 3. Generar la tabla con kable
+kable(
+  tabla_levene,
+  caption = "Resultados de la Prueba de Levene",
+  digits = 4,
+  align = 'c'
+)
 ```
 
-Los resultados de la prueba indicaron que existían diferencias significativas en la dispersión entre los grupos ($p < 0.0001$), lo que sugiere que existe evidencia muestral suficiente para afirmar que la variabilidad de SColSCel difiere en al menos uno de los cuatro tratamientos. Esto permite identificar cuáles condiciones generan una producción de colágeno más consistente y cuáles presentan mayor dispersión. 
+Los resultados de la prueba indicaron que existían diferencias significativas en la dispersión entre los grupos (𝑝 < 0.0001), lo que sugiere que existe evidencia muestral suficiente para afirmar que la variabilidad de la producción de colágeno sobre la superficie celular (SColSCel) difiere en al menos uno de los cuatro tratamientos. Esta prueba permite identificar cuáles condiciones generan una producción de colágeno más consistente y cuáles presentan mayor dispersión. 
 
-El análisis descriptivo mostró que SFB10%+MA presentó la menor variabilidad, indicando una producción de colágeno más consistente, mientras que SFB 10% mostró la mayor dispersión, reflejando mayor heterogeneidad en la respuesta de las células.  
+El análisis descriptivo mostró que SFB10%+MA presentó la menor variabilidad, indicando una producción de colágeno más consistente, mientras que SFB 10% mostró la mayor dispersión, reflejando mayor heterogeneidad en la respuesta de las células.
 
-# Conclusiones (dos paginas a lo sumo)
+\newpage 
+
+# Conclusión  
+
+El análisis permitió evaluar el posible efecto antifibrogénico de la combinación de Metformina y Ácido Lipoico (MA) en Células Estelares Hepáticas (HSC), considerando como variable principal la proporción de Colágeno sobre la Superficie Celular (SColSCel).
+Dado que esta variable representa una proporción y mostró distribuciones asimétricas en los diagramas de densidad (Figura 2), se decidió aplicar métodos estadísticos no paramétricos, que no dependen del supuesto de normalidad. Esta decisión asegura que las conclusiones sean más confiables, incluso si los datos no siguen una distribución normal, a pesar de que la prueba de Lilliefors no detectó desviaciones significativas de normalidad (Tabla 2).  
+
+Los resultados descriptivos ya mostraron diferencias claras entre los tratamientos. El grupo sometido al tratamiento de activación fibrogénica (SFB 10%) presentó la mediana más alta (0.215), mientras que el tratamiento combinado SFB 10%+MA tuvo la mediana más baja (0.048) y la menor variabilidad (Tabla 1). 
+
+El análisis inferencial comenzó con la prueba de Kruskal-Wallis, que confirmó la existencia de diferencias significativas entre los tratamientos ($H = 37.936, p < 0.0001$). Esto permitió concluir que las medianas de SColSCel no eran iguales entre los grupos y avanzar hacia comparaciones más específicas. 
+
+Posteriormente, se aplicó la prueba de Dunn con ajuste de Holm para comparar cada tratamiento con el grupo control (SFB 1%). Los resultados mostraron que el tratamiento SFB 10% fue significativamente diferente del control ($p = 0.0010$), validando el modelo experimental. De forma aún más relevante, el grupo SFB 10%+MA también fue significativamente diferente ($p = 0.0039$), lo que indica que la combinación de Metformina y Ácido Lipoico tiene un efecto inhibidor sobre la producción de colágeno, llegando incluso a niveles inferiores a los observados en el control. La única comparación sin diferencias significativas fue la del grupo SFB 1%+MA, lo que sugiere que el efecto protector se manifiesta principalmente bajo condiciones de alta activación fibrogénica.
+
+Finalmente, la prueba de Levene (basada en la mediana) mostró diferencias significativas en la variabilidad entre los grupos ($F = 10.6844, p < 0.0001$). En conjunto con los resultados descriptivos, esto indica que el tratamiento SFB 10%+MA no solo redujo la cantidad de colágeno, sino que también generó una respuesta celular más homogénea y estable. 
+
+En síntesis, los resultados obtenidos confirman de manera clara la hipótesis principal del estudio: la combinación de Metformina y Ácido Lipoico (MA) presenta un alto potencial antifibrogénico en las Células Estelares Hepáticas. 
+
+Incluso bajo condiciones diseñadas para inducir una fuerte producción de colágeno (SFB 10%), la presencia de los compuestos Metformina y Acido Lipoico logró reducir notablemente su acumulación. En el grupo SFB 10%+MA, la cantidad de colágeno fue menor no solo que en las células activadas, sino también que en el grupo control (SFB 1%). Este hallazgo demuestra que el tratamiento puede no solo detener el daño, sino también revertir parcialmente la activación celular. Además, la baja variabilidad observada en este grupo sugiere que el efecto reductor de Metformina y Ácido Lipóico es consistente y predecible, lo cual es una característica deseable para cualquier enfoque terapéutico. 
+
+En conclusión, la combinación de Metformina y Ácido Lipóico surge como una estrategia prometedora para el tratamiento de la fibrosis hepática, ya que combina una fuerte reducción en la producción de colágeno con una respuesta celular estable. Estos resultados experimentales respaldan la necesidad de continuar con estudios adicionales que evalúen su seguridad y eficacia, abriendo la posibilidad de nuevas alternativas para prevenir o tratar la enfermedad hepática avanzada y el carcinoma hepatocelular (HCC).
 
 
 # Anexo
@@ -202,15 +334,13 @@ El análisis descriptivo mostró que SFB10%+MA presentó la menor variabilidad, 
 
 - Regla de decisión: $\text{Rechazo } H_0 \text{ si} \ L \ge L_{1 - \alpha}$
   
-```{r}
-# Presentacion de una tabla con los 4 test realizados
-```
 
 ## 2 Condiciones de mayor y menor producción en promedio - Test de Kruskal–Wallis
 
 - Hipótesis: 
   
 - Estadística: 
+
 
 - Regla de decisión: 
 
