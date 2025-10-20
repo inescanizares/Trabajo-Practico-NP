@@ -191,7 +191,7 @@ tabla_levene <- data.frame(
   `Estadístico F` = resultado_levene[1, "F value"],
   `gl1` = resultado_levene[1, "Df"],
   `gl2` = resultado_levene[2, "Df"],
-  `P-Value` = resultado_levene[1, "Pr(>F)"],
+  `P-Value` = "<0.0001", #resultado_levene[1, "Pr(>F)"]
   check.names = FALSE
 )
 
@@ -229,7 +229,8 @@ tabla_final <- resultado_kruskal %>%
     `Estadística` = statistic,
     `G.L. (Grados de Libertad)` = df,
     `P-Value` = p
-  )
+  ) |> 
+  mutate(`P-Value` = "<0.0001") #Para que no imprima 0 el p-value
 
 # 3. Generar la tabla con kable
 kable(
@@ -283,7 +284,7 @@ tabla_levene <- data.frame(
   `Estadístico F` = resultado_levene[1, "F value"],
   `gl1` = resultado_levene[1, "Df"],
   `gl2` = resultado_levene[2, "Df"],
-  `P-Value` = resultado_levene[1, "Pr(>F)"],
+  `P-Value` = "<0.0001", #resultado_levene[1, "Pr(>F)"]
   check.names = FALSE
 )
 
@@ -321,45 +322,63 @@ Incluso bajo condiciones diseñadas para inducir una fuerte producción de colá
 
 En conclusión, la combinación de Metformina y Ácido Lipóico surge como una estrategia prometedora para el tratamiento de la fibrosis hepática, ya que combina una fuerte reducción en la producción de colágeno con una respuesta celular estable. Estos resultados experimentales respaldan la necesidad de continuar con estudios adicionales que evalúen su seguridad y eficacia, abriendo la posibilidad de nuevas alternativas para prevenir o tratar la enfermedad hepática avanzada y el carcinoma hepatocelular (HCC).
 
-
 # Anexo
 
 ## 1 Prueba de Normalidad para las muestras - Test de bondad de ajuste de Lilliefors
 
-- Hipótesis: $$H_0) \ X_i \sim Normal \ \ \text{vs} \ \ H_1) \ X_i \nsim Normal$$ 
-  Con $X_i$: muestra aleatoria del tratamiento $i$-esimo. $i = 1,4$
+- Hipótesis: $H_0) \ X_i \sim Normal \ \ \text{vs} \ \ H_1) \ X_i \nsim Normal$
+
+  Con $X_i$: muestra aleatoria del tratamiento $i$-esimo. $i = \overline{1,4}$
+  
   En particular se realizaron 4 test de normalidad para los distintos tratamientos.
   
 - Estadística: $L_n = máx_x |S_n(X_i) - F_o(X_i)|$, mide la maxima diferencia entre la función de distribución acumulada empirica contra la funcion de distribución normal. 
-
+  
 - Regla de decisión: $\text{Rechazo } H_0 \text{ si} \ L \ge L_{1 - \alpha}$
+  Dado p-value > 0.05 $\implies$ No Rechazo $H_0$ en los 4 test realizados.
   
-
-## 2 Condiciones de mayor y menor producción en promedio - Test de Kruskal–Wallis
-
-- Hipótesis: 
+## 2 Estudio sobre la homogeneidad de varianzas - Test de igualdad de variancias de Levene
   
-- Estadística: 
+- Hipótesis: $H_0) \sigma_1^2 = \sigma_2^2 = \sigma_3^2 \ \ \text{vs} \ \ H_1) \text{Al menos un } \sigma_i^2 \text{ distinto del resto } i=\overline{1,3}$
+ 
+  Con $\sigma_i^2$: variancia de la Superficie de Colágeno sobre Superficie Celular en el tratamiento $i$-esimo. $i = \overline{1,3}$
+  
+  Se aplica una transformación de la variable $Z = |Y_{ij} - \overline{Y}_{i.}|$
+    
+- Estadística: $F = \frac{CM_{trat}}{CM_{error}}$, se basa en realizar un ANOVA sobre los valores absolutos de los residuos.
+  
+    
+- Regla de decisión: $\text{Rechazo } H_0 \text{ si} \ F_{obs} \geq F_{3, 81, 1 - \alpha}$
+  Dado p-value < 0.05 $\implies$ Rechazo $H_0$.
 
 
-- Regla de decisión: 
+## 3 Condiciones de mayor y menor producción en promedio - Test de Kruskal–Wallis
+  
+- Hipótesis: $H_0) \eta_1 = \eta_2 = \eta_3 \ \ \text{vs} \ \ H_1) \text{Al menos un } \eta_i \text{ distinto del resto } i=\overline{1,3}$
 
+  Con $\eta_i$: mediana de la Superficie de Colágeno sobre Superficie Celular en el tratamiento $i$-esimo. $i = \overline{1,3}$
+  
+  La estadística se basa en el empleo de rangos en lugar de las
+observaciones originales.
+  
+  Se ordena de menor a mayor los valores de la muestra combinada.
+    
+- Estadística: $H = \frac{12}{N(N+1)} \sum_{i=1}^{k} \frac{R_i^2}{n_i} - 3(N+1)$
+  
+  Con $R_i = \sum_{j=1}^{n_i}r_{ij}$ suma de rangos de cada muestra.
+    
+- Regla de decisión: $\text{Rechazo } H_0 \text{ si} \ h_{obs} \geq \chi_{3, 1 - \alpha}^2$
+  
+  Dado p-value < 0.05 $\implies$ Rechazo $H_0$.
 
+## 4  Comparación de tratamientos con el grupo control (SFB1%) por pares (Dunn-Holm)
+  
+- Hipótesis: $H_0) \eta_1 = \eta_i \ \ \text{vs} \ \ H_1) \eta_1 \neq \eta_i \ \forall i=2,4$
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  Con $\eta_i$: mediana de la Superficie de Colágeno sobre Superficie Celular en el tratamiento $i$-esimo. $i = \overline{1,4}$
+    
+- Regla de decisión: $\text{Rechazar } H_0 \text{ si } |R_1 - R_i| \ge z_{1 - \frac{\alpha}{2(k-1)}} \left[ \frac{N(N+1)}{12} \left( \frac{1}{n_1} + \frac{1}{n_i} \right) \right]^{1/2}. \ Con \ i =2,4$
+  
+  Dado p-value < 0.05 para $|R_1 - R_2|$ y $|R_1 - R_4|$ $\implies$ Rechazo $H_0$
+  
+  Dado p-value > 0.05 para $|R_1 - R_3|$ $\implies$ No Rechazo $H_0$
