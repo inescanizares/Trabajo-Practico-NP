@@ -27,8 +27,9 @@ include-in-header:
     \includegraphics[width=0.7\textwidth]{logo_facultad.png}
     } \par 
     \vspace{3cm}
-    {\scshape\Huge Trabajo Práctico Estadistica No Parametrica \par}
+    {\scshape\Huge Estadística No Paramétrica \par}
     \vspace{3cm}
+    {\itshape\LARGE Trabajo Práctico  \par}
     \vfill
     {\Large Integrantes: \par}
     {\Large Coveñas Zavaleta Cristian Nahuel\\
@@ -37,6 +38,7 @@ include-in-header:
     \vfill
     {\large Octubre 2025 \par}
 \end{titlepage}
+
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(fig.align="center")
@@ -184,7 +186,7 @@ Asimismo, se analizó la homogeneidad de varianzas (homocedasticidad) mediante l
 
 ```{r}
 # 1. Ejecutar y guardar el test
-resultado_levene <- leveneTest(SColSCel ~ tratamiento, data = datos, center = median)
+resultado_levene <- leveneTest(SColSCel ~ tratamiento, data = datos, center = mean)
 
 # 2. Extraer y crear el data frame
 tabla_levene <- data.frame(
@@ -277,7 +279,7 @@ Con el fin de identificar las condiciones que generan mayor o menor variabilidad
 ```{r}
 
 # 1. Ejecutar y guardar el test
-resultado_levene <- leveneTest(SColSCel ~ tratamiento, data = datos, center = median)
+resultado_levene <- leveneTest(SColSCel ~ tratamiento, data = datos, center = mean)
 
 # 2. Extraer y crear el data frame
 tabla_levene <- data.frame(
@@ -297,7 +299,7 @@ kable(
 )
 ```
 
-Los resultados de la prueba indicaron que existían diferencias significativas en la dispersión entre los grupos (𝑝 < 0.0001), lo que sugiere que existe evidencia muestral suficiente para afirmar que la variabilidad de la producción de colágeno sobre la superficie celular (SColSCel) difiere en al menos uno de los cuatro tratamientos. Esta prueba permite identificar cuáles condiciones generan una producción de colágeno más consistente y cuáles presentan mayor dispersión. 
+Los resultados de la prueba indicaron que existían diferencias significativas en la dispersión entre los grupos ($p < 0.0001$), lo que sugiere que existe evidencia muestral suficiente para afirmar que la variabilidad de la producción de colágeno sobre la superficie celular (SColSCel) difiere en al menos uno de los cuatro tratamientos. Esta prueba permite identificar cuáles condiciones generan una producción de colágeno más consistente y cuáles presentan mayor dispersión. 
 
 El análisis descriptivo mostró que SFB10%+MA presentó la menor variabilidad, indicando una producción de colágeno más consistente, mientras que SFB 10% mostró la mayor dispersión, reflejando mayor heterogeneidad en la respuesta de las células.
 
@@ -314,7 +316,7 @@ El análisis inferencial comenzó con la prueba de Kruskal-Wallis, que confirmó
 
 Posteriormente, se aplicó la prueba de Dunn con ajuste de Holm para comparar cada tratamiento con el grupo control (SFB 1%). Los resultados mostraron que el tratamiento SFB 10% fue significativamente diferente del control ($p = 0.0010$), validando el modelo experimental. De forma aún más relevante, el grupo SFB 10%+MA también fue significativamente diferente ($p = 0.0039$), lo que indica que la combinación de Metformina y Ácido Lipoico tiene un efecto inhibidor sobre la producción de colágeno, llegando incluso a niveles inferiores a los observados en el control. La única comparación sin diferencias significativas fue la del grupo SFB 1%+MA, lo que sugiere que el efecto protector se manifiesta principalmente bajo condiciones de alta activación fibrogénica.
 
-Finalmente, la prueba de Levene (basada en la mediana) mostró diferencias significativas en la variabilidad entre los grupos ($F = 10.6844, p < 0.0001$). En conjunto con los resultados descriptivos, esto indica que el tratamiento SFB 10%+MA no solo redujo la cantidad de colágeno, sino que también generó una respuesta celular más homogénea y estable. 
+Finalmente, la prueba de Levene (basada en la media) mostró diferencias significativas en la variabilidad entre los grupos ($F = 10.6844, p < 0.0001$). En conjunto con los resultados descriptivos, esto indica que el tratamiento SFB 10%+MA no solo redujo la cantidad de colágeno, sino que también generó una respuesta celular más homogénea y estable. 
 
 En síntesis, los resultados obtenidos confirman de manera clara la hipótesis principal del estudio: la combinación de Metformina y Ácido Lipoico (MA) presenta un alto potencial antifibrogénico en las Células Estelares Hepáticas. 
 
@@ -373,11 +375,11 @@ observaciones originales.
 
 ## 4  Comparación de tratamientos con el grupo control (SFB1%) por pares (Dunn-Holm)
   
-- Hipótesis: $H_0) \eta_1 = \eta_i \ \ \text{vs} \ \ H_1) \eta_1 \neq \eta_i \ \forall i=2,4$
+- Hipótesis: $H_0) \eta_1 = \eta_i \ \ \text{vs} \ \ H_1) \eta_1 \neq \eta_i \ \forall i=\overline{2,4}$
 
   Con $\eta_i$: mediana de la Superficie de Colágeno sobre Superficie Celular en el tratamiento $i$-esimo. $i = \overline{1,4}$
     
-- Regla de decisión: $\text{Rechazar } H_0 \text{ si } |R_1 - R_i| \ge z_{1 - \frac{\alpha}{2(k-1)}} \left[ \frac{N(N+1)}{12} \left( \frac{1}{n_1} + \frac{1}{n_i} \right) \right]^{1/2}. \ Con \ i =2,4$
+- Regla de decisión: $\text{Rechazar } H_0 \text{ si } |R_1 - R_i| \ge z_{1 - \frac{\alpha}{2(k-1)}} \left[ \frac{N(N+1)}{12} \left( \frac{1}{n_1} + \frac{1}{n_i} \right) \right]^{1/2}. \ Con \ i =\overline{2,4}$
   
   Dado p-value < 0.05 para $|R_1 - R_2|$ y $|R_1 - R_4|$ $\implies$ Rechazo $H_0$
   
