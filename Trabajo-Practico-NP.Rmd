@@ -36,6 +36,9 @@ include-in-header:
     {\Large Coveñas Zavaleta Cristian Nahuel\\
             Cañizares María Inés\\
             Roura Agustina \par}
+    {\Large Docentes: \par}
+    {\Large Bussi Javier\\
+            Castellanos Valentina \par}
     \vfill
     {\large Octubre 2025 \par}
 \end{titlepage}
