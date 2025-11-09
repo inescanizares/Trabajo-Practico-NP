@@ -12,9 +12,10 @@ lang: es-ES
 editor_options: 
   chunk_output_type: console
 header-includes:
+  - \usepackage{float}
   - \usepackage{caption}
-  - \captionsetup[table]{position=bottom,labelformat=default,labelsep=colon,name=Tabla}
   - \captionsetup[figure]{position=top,labelformat=default,labelsep=colon,name=Figura}
+  - \captionsetup[table]{position=bottom,labelformat=default,labelsep=colon,name=Tabla}
 include-in-header:
             - text: |
                 \usepackage{float}
@@ -42,7 +43,6 @@ include-in-header:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(fig.align="center")
-knitr::opts_chunk$set(fig.topcaption = TRUE)
 knitr::opts_chunk$set(out.width="55%")
 knitr::opts_chunk$set(out.height="35%")
 knitr::opts_chunk$set(message=FALSE)
@@ -108,13 +108,13 @@ datos %>%
 ```
 \newpage
 
-```{r, fig.cap='Distribución de Superficie de Colágeno sobre Superficie Celular por tratamiento'}
+```{r grafico1, echo=FALSE, results='asis'}
+cat("\\text{Figura 1:} Distribución de Superficie de Colágeno sobre Superficie Celular por tratamiento\n\n")
+
 ggplot(datos, aes(x = tratamiento, y = SColSCel)) +
   geom_boxplot(fill = "skyblue", color = "black") +
-  labs(
-    x = "Tratamiento",
-    y = "Superficie de Colágeno sobre Superficie Celular"
-  ) +
+  labs(x = "Tratamiento",
+       y = "Superficie de Colágeno sobre Superficie Celular") +
   theme_bw()
 ```
 
@@ -126,7 +126,11 @@ Además, en la Figura 1 se observaron valores atípicos en los grupos SFB10% y S
 
 Los resultados sugieren que la combinación de SFB con metformina y ácido lipoico (+MA) reduce de manera consistente la superficie de colágeno sobre las células.  
 
-```{r , fig.cap='Distribución de la Proporción de Colágeno por Tratamiento'}
+\newpage
+
+```{r grafico2, echo=FALSE, results='asis'}
+cat("\\begin{center}\\text{Figura 2:} Distribución de la Proporción de Colágeno por Tratamiento\\end{center}\n\n")
+
 ggplot(datos, aes(x = SColSCel, fill = tratamiento)) +
   geom_density(alpha = 0.6) +
   geom_vline(
@@ -146,8 +150,8 @@ ggplot(datos, aes(x = SColSCel, fill = tratamiento)) +
   scale_color_brewer(palette = "Set1") +
   facet_wrap(~tratamiento) +
   theme(legend.position = "none")
+
 ```
-\newpage
 
 La Figura 2 sugiere que la forma de las distribuciones para cada tratamiento muestra un alejamiento de la normalidad, con asimetrías visibles y posibles acumulaciones de valores en los extremos. Este hecho se refuerza porque la variable de interés, Superficie de Colágeno sobre Superficie Celular (SColSCel), es por definición una proporción , lo que implica que su rango está acotado entre 0 y 1 y favorece la asimetría en su distribución. Por esta razón, basándonos tanto en la evidencia gráfica como en la naturaleza de la variable, se plantea la necesidad de proceder con métodos estadísticos no paramétricos, ya que son menos sensibles a las desviaciones de los supuestos de normalidad requeridos por las pruebas paramétricas tradicionales (como el ANOVA).
 
@@ -213,7 +217,7 @@ Se procede continuar el análisis con métodos estadísticos no paramétricos, q
 #### Condiciones que generan mayor y menor producción de colágeno en promedio 
 
 Se decidió aplicar la prueba de Kruskal–Wallis para evaluar diferencias entre los grupos. 
-Se formuló como hipótesis principal que la proporción de colágeno mediano es la misma entre los cuatro tratamientos aplicados a las HSC, esperando que alguna condición de activación fibrogénica presentara una mediana diferente a las demás.
+Se formuló como hipótesis principal que la mediana de la proporción de colágeno es la misma entre los cuatro tratamientos aplicados a las HSC, esperando que alguna condición de activación fibrogénica presentara una mediana diferente a las demás.
 
 ```{r}
 library(rstatix)
@@ -246,7 +250,7 @@ kable(
 
 Los resultados del test de Kruskal–Wallis indicaron una diferencia significativa entre los grupos. Se concluye que se rechaza la hipótesis nula de igualdad de medianas, esto  confirma que las condiciones de cultivo y la inclusión de los compuestos antifibrogénicos modifican de manera significativa la tendencia central de la actividad fibrogénica de las HSC. 
 
-Para identificar qué tratamientos se diferenciaban específicamente del control, se realizaron comparaciones múltiples mediante la prueba de Dunn con ajuste de Holm. El objetivo fue determinar cuáles condiciones generaban mayor o menor producción de colágeno en promedio.
+Para identificar qué tratamientos difieren entre sí después de rechazar la hipótesis nula de Kruskal-Wallis, se realizaron comparaciones múltiples por pares mediante la prueba de Dunn con ajuste de Holm. El objetivo fue determinar cuáles pares de condiciones presentaban una mediana de producción de colágeno significativamente diferente.  
 
 ```{r}
 #dunn.test(datos$SColSCel, datos$tratamiento, method="holm")
@@ -305,20 +309,20 @@ El análisis descriptivo mostró que SFB10%+MA presentó la menor variabilidad, 
 
 # Conclusión  
 
-El análisis permitió evaluar el posible efecto antifibrogénico de la combinación de MA en HSC, tomando como varable respuesta la proporción de SColSCel.
+El análisis permitió evaluar el posible efecto antifibrogénico de la combinación de MA en HSC, tomando como variable respuesta la proporción de SColSCel.
 Dado que esta variable representa una proporción y mostró distribuciones asimétricas en los diagramas de densidad, se decidió aplicar métodos estadísticos no paramétricos, que no dependen del supuesto de normalidad. Esta decisión asegura que las conclusiones sean más confiables, incluso si los datos no siguen una distribución normal, a pesar de que la prueba de Lilliefors no detectó desviaciones significativas de normalidad.  
 
 Los resultados descriptivos ya mostraron diferencias claras entre los tratamientos. El grupo sometido al tratamiento de activación fibrogénica (SFB 10%) presentó la mediana más alta, mientras que el tratamiento combinado SFB 10%+MA tuvo la mediana más baja y la menor variabilidad. 
 
 El análisis inferencial comenzó con la prueba de Kruskal-Wallis, que confirmó la existencia de diferencias significativas entre los tratamientos. Esto permitió concluir que las medianas de SColSCel no eran iguales entre los grupos y avanzar hacia comparaciones más específicas. 
 
-Posteriormente, se aplicó la prueba de Dunn con ajuste de Holm para comparar cada tratamiento con el grupo control (SFB 1%). Los resultados mostraron que el tratamiento SFB 10% fue significativamente diferente del control, validando el modelo experimental. De forma aún más relevante, el grupo SFB 10%+MA también fue significativamente diferente, lo que indica que la combinación de Metformina y Ácido Lipoico tiene un efecto inhibidor sobre la producción de colágeno, llegando incluso a niveles inferiores a los observados en el control. La única comparación sin diferencias significativas fue la del grupo SFB 1%+MA, lo que sugiere que el efecto protector se manifiesta principalmente bajo condiciones de alta activación fibrogénica.
+Posteriormente, se aplicó la prueba de Dunn con ajuste de Holm para realizar comparaciones múltiples por pares. Los resultados mostraron que el tratamiento SFB 10% fue significativamente diferente del control (SFB 1%), validando el modelo experimental. De forma aún más relevante, el grupo SFB 10%+MA también fue significativamente diferente del control, lo que indica que la combinación de Metformina y Ácido Lipoico tiene un efecto inhibidor sobre la producción de colágeno, llegando incluso a niveles inferiores a los observados en el control. La única comparación sin diferencias significativas con el control fue la del grupo SFB 1%+MA , lo que sugiere que el efecto protector se manifiesta principalmente bajo condiciones de alta activación fibrogénica. Además, la ausencia de diferencias significativas entre los dos grupos tratados con los compuestos (SFB 1%+MA vs SFB 10%+MA) sugiere que la Metformina y el Ácido Lipoico logran estabilizar la producción de colágeno a un nivel bajo, independientemente del nivel de activación inicial.
 
 Finalmente, la prueba de Levene mostró diferencias significativas en la variabilidad entre los grupos. En conjunto con los resultados descriptivos, esto indica que el tratamiento SFB 10%+MA no solo redujo la cantidad de colágeno, sino que también generó una respuesta celular más homogénea y estable. 
 
 En síntesis, los resultados obtenidos confirman de manera clara la hipótesis principal del estudio: la combinación de MA presenta un alto potencial antifibrogénico en las Células Estelares Hepáticas. 
 
-Incluso bajo condiciones diseñadas para inducir una fuerte producción de colágeno (SFB 10%), la presencia de los compuestos Metformina y Acido Lipoico logró reducir notablemente su acumulación. En el grupo SFB 10%+MA, la cantidad de colágeno fue menor no solo que en las células activadas, sino también que en el grupo control (SFB 1%). Este hallazgo demuestra que el tratamiento puede no solo detener el daño, sino también revertir parcialmente la activación celular. Además, la baja variabilidad observada en este grupo sugiere que el efecto reductor de Metformina y Ácido Lipóico es consistente y predecible, lo cual es una característica deseable para cualquier enfoque terapéutico. 
+Incluso bajo condiciones diseñadas para inducir una fuerte producción de colágeno (SFB 10%), la presencia de los compuestos Metformina y Acido Lipoico logró reducir notablemente su acumulación. En el grupo SFB 10%+MA, la cantidad de colágeno fue menor no solo que en las células activadas, sino también que en el grupo control (SFB 1%). Este hallazgo demuestra que el tratamiento puede no solo detener el daño, sino también revertir parcialmente la activación celular. Además, la baja variabilidad observada en este grupo sugiere que el efecto reductor de Metformina y Ácido Lipoico es consistente y predecible, lo cual es una característica deseable para cualquier enfoque terapéutico. 
 
 En conclusión, la combinación de Metformina y Ácido Lipóico surge como una estrategia prometedora para el tratamiento de la fibrosis hepática, ya que combina una fuerte reducción en la producción de colágeno con una respuesta celular estable. Estos resultados experimentales respaldan la necesidad de continuar con estudios adicionales que evalúen su seguridad y eficacia, abriendo la posibilidad de nuevas alternativas para prevenir o tratar la enfermedad hepática avanzada y el carcinoma hepatocelular (HCC).
 
@@ -337,7 +341,7 @@ En conclusión, la combinación de Metformina y Ácido Lipóico surge como una e
 - Regla de decisión: $\text{Rechazo } H_0 \text{ si} \ L \ge L_{1 - \alpha}$
   Dado que el p-value > 0.05 $\implies$ No Rechazo $H_0$ en los 4 test realizados.
   
-## 2 Estudio sobre la homogeneidad de varianzas - Test de igualdad de variancias de Levene
+## Estudio sobre la homogeneidad de varianzas - Test de igualdad de variancias de Levene
   
 - Hipótesis: $H_0) \sigma_1^2 = \sigma_2^2 = \sigma_3^2 \ \ \text{vs} \ \ H_1) \text{Al menos un } \sigma_i^2 \text{ distinto del resto } i=\overline{1,3}$
  
@@ -349,10 +353,10 @@ En conclusión, la combinación de Metformina y Ácido Lipóico surge como una e
   
     
 - Regla de decisión: $\text{Rechazo } H_0 \text{ si} \ F_{obs} \geq F_{3, 81, 1 - \alpha}$
-  Dado p-value < 0.05 $\implies$ Rechazo $H_0$.
+  Dado que el p-value < 0.05 $\implies$ Rechazo $H_0$.
 
 
-## 3 Condiciones de mayor y menor producción en promedio - Test de Kruskal–Wallis
+## Condiciones de mayor y menor producción en promedio - Test de Kruskal–Wallis
   
 - Hipótesis: $H_0) \eta_1 = \eta_2 = \eta_3 \ \ \text{vs} \ \ H_1) \text{Al menos un } \eta_i \text{ distinto del resto } i=\overline{1,3}$
 
@@ -369,9 +373,9 @@ observaciones originales.
     
 - Regla de decisión: $\text{Rechazo } H_0 \text{ si} \ h_{obs} \geq \chi_{3, 1 - \alpha}^2$
   
-  Dado p-value < 0.05 $\implies$ Rechazo $H_0$.
+  Dado que el p-value < 0.05 $\implies$ Rechazo $H_0$.
 
-## 4  Comparación de tratamientos con el grupo control (SFB1%) por pares (Dunn-Holm)
+##  Comparación de tratamientos con el grupo control (SFB1%) por pares (Dunn-Holm)
   
 - Hipótesis: $H_0) \eta_1 = \eta_i \ \ \text{vs} \ \ H_1) \eta_1 \neq \eta_i \ \forall i=\overline{2,4}$
 
@@ -379,6 +383,6 @@ observaciones originales.
     
 - Regla de decisión: $\text{Rechazar } H_0 \text{ si } |R_1 - R_i| \ge z_{1 - \frac{\alpha}{2(k-1)}} \left[ \frac{N(N+1)}{12} \left( \frac{1}{n_1} + \frac{1}{n_i} \right) \right]^{1/2}. \ Con \ i =\overline{2,4}$
   
-  Dado p-value < 0.05 para $|R_1 - R_2|$ y $|R_1 - R_4|$ $\implies$ Rechazo $H_0$
+  Dado que el p-value < 0.05 para $|R_1 - R_2|$ y $|R_1 - R_4|$ $\implies$ Rechazo $H_0$
   
-  Dado p-value > 0.05 para $|R_1 - R_3|$ $\implies$ No Rechazo $H_0$
+  Dado que el p-value > 0.05 para $|R_1 - R_3|$ $\implies$ No Rechazo $H_0$
