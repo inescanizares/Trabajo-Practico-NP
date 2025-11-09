@@ -311,18 +311,16 @@ Estadística & G.L. (Grados de Libertad) & P-Value \\
 37.936 & 3 & \textless0.0001 \\
 \end{longtable}
 
-Los resultados del test de Kruskal--Wallis indicaron una diferencia
-significativa entre los grupos. Se concluye que se rechaza la hipótesis
-nula de igualdad de medianas, esto confirma que las condiciones de
-cultivo y la inclusión de los compuestos antifibrogénicos modifican de
-manera significativa la tendencia central de la actividad fibrogénica de
-las HSC.
-
-Para identificar qué tratamientos difieren entre sí después de rechazar
-la hipótesis nula de Kruskal-Wallis, se realizaron comparaciones
-múltiples por pares mediante la prueba de Dunn con ajuste de Holm. El
-objetivo fue determinar cuáles pares de condiciones presentaban una
-mediana de producción de colágeno significativamente diferente.
+Los resultados del test de Kruskal--Wallis mostraron diferencias
+significativas entre los grupos, lo que indica que se rechaza la
+hipótesis nula de igualdad de medianas. Esto sugiere que las condiciones
+de cultivo y la presencia de compuestos antifibrogénicos influyen de
+manera significativa en la actividad fibrogénica de las HSC. Para
+identificar qué tratamientos difieren entre sí después de rechazar la
+hipótesis nula de Kruskal-Wallis, se realizaron comparaciones múltiples
+por pares mediante la prueba de Dunn con ajuste de Holm. El objetivo fue
+determinar cuáles pares de condiciones presentaban una mediana de
+producción de colágeno significativamente diferente.
 
 \begin{longtable}[]{@{}cc@{}}
 \caption{Comparaciones por Pares (Dunn-Holm)}\tabularnewline
@@ -448,12 +446,17 @@ hipótesis principal del estudio: la combinación de MA presenta un alto
 potencial antifibrogénico en las Células Estelares Hepáticas.
 
 Incluso bajo condiciones diseñadas para inducir una fuerte producción de
-colágeno (SFB 10\%), la presencia de los compuestos Metformina y Acido
+colágeno (SFB 10\%), la presencia de los compuestos Metformina y Ácido
 Lipoico logró reducir notablemente su acumulación. En el grupo SFB
-10\%+MA, la cantidad de colágeno fue menor no solo que en las células
-activadas, sino también que en el grupo control (SFB 1\%). Este hallazgo
-demuestra que el tratamiento puede no solo detener el daño, sino también
-revertir parcialmente la activación celular. Además, la baja
+10\%+MA, la cantidad de colágeno fue significativamente diferente de la
+del control (SFB 1\%); al observar la mediana, esta cantidad fue menor
+no solo que en las células activadas, sino también que en el grupo SFB
+1\%+MA. Este hallazgo demuestra que el tratamiento puede no solo detener
+el daño, sino también revertir parcialmente la activación celular. El
+efecto inhibidor se demuestra robusto, ya que la producción de colágeno
+en SFB 10\%+MA no fue significativamente diferente de la observada en
+SFB 1\%+MA, lo que sugiere una estabilización en niveles bajos
+independientemente de la activación inicial. Además, la baja
 variabilidad observada en este grupo sugiere que el efecto reductor de
 Metformina y Ácido Lipoico es consistente y predecible, lo cual es una
 característica deseable para cualquier enfoque terapéutico.
@@ -489,9 +492,12 @@ Lilliefors}\label{prueba-de-normalidad-para-las-muestras---test-de-bondad-de-aju
   la funcion de distribución normal.
 \item
   Regla de decisión:
-  \(\text{Rechazo } H_0 \text{ si} \ L \ge L_{1 - \alpha}\) Dado que el
-  p-value \textgreater{} 0.05 \(\implies\) No Rechazo \(H_0\) en los 4
-  test realizados.
+  \(\text{Rechazo } H_0 \text{ si} \ L \ge L_{1 - \alpha}\)
+\item
+  Dado que
+  \(L_n = 0.143 \text{ (SFB1%),} 0.145 \text{ (SFB10%),} 0.122 \text{ (SFB1%+MA),} 0.127 \text{ (SFB10%+MA)}
+  \) y el p-value \textgreater{} 0.05 \(\implies\) No Rechazo \(H_0\) en
+  los 4 test realizados.
 \end{itemize}
 
 \subsection{Estudio sobre la homogeneidad de varianzas - Test de
@@ -515,7 +521,9 @@ Levene}\label{estudio-sobre-la-homogeneidad-de-varianzas---test-de-igualdad-de-v
 \item
   Regla de decisión:
   \(\text{Rechazo } H_0 \text{ si} \ F_{obs} \geq F_{3, 81, 1 - \alpha}\)
-  Dado que el p-value \textless{} 0.05 \(\implies\) Rechazo \(H_0\).
+\item
+  Dado que \(F = 13.289\) y el p-value \textless{} 0.05 \(\implies\)
+  Rechazo \(H_0\).
 \end{itemize}
 
 \subsection{Condiciones de mayor y menor producción en promedio - Test
@@ -542,30 +550,31 @@ Kruskal--Wallis}\label{condiciones-de-mayor-y-menor-producciuxf3n-en-promedio---
 \item
   Regla de decisión:
   \(\text{Rechazo } H_0 \text{ si} \ h_{obs} \geq \chi_{3, 1 - \alpha}^2\)
-
-  Dado que el p-value \textless{} 0.05 \(\implies\) Rechazo \(H_0\).
+\item
+  Dado que \(H = 37.9\) y el p-value \textless{} 0.05 \(\implies\)
+  Rechazo \(H_0\).
 \end{itemize}
 
-\subsection{Comparación de tratamientos con el grupo control (SFB1\%)
-por pares
-(Dunn-Holm)}\label{comparaciuxf3n-de-tratamientos-con-el-grupo-control-sfb1-por-pares-dunn-holm}
+\subsection{Comparación de todos los tratamientos por pares
+(Dunn-Holm)}\label{comparaciuxf3n-de-todos-los-tratamientos-por-pares-dunn-holm}
 
 \begin{itemize}
 \item
   Hipótesis:
-  \(H_0) \eta_1 = \eta_i \ \ \text{vs} \ \ H_1) \eta_1 \neq \eta_i \ \forall i=\overline{2,4}\)
+  \(H_0) \eta_i = \eta_j \ \ \text{vs} \ \ H_1) \eta_i \neq \eta_j \ \forall i < j \  \ \forall i,j=\overline{1,4}\)
 
   Con \(\eta_i\): mediana de la Superficie de Colágeno sobre Superficie
   Celular en el tratamiento \(i\)-esimo. \(i = \overline{1,4}\)
 \item
   Regla de decisión:
-  \(\text{Rechazar } H_0 \text{ si } |R_1 - R_i| \ge z_{1 - \frac{\alpha}{2(k-1)}} \left[ \frac{N(N+1)}{12} \left( \frac{1}{n_1} + \frac{1}{n_i} \right) \right]^{1/2}. \ Con \ i =\overline{2,4}\)
-
-  Dado que el p-value \textless{} 0.05 para \(|R_1 - R_2|\) y
-  \(|R_1 - R_4|\) \(\implies\) Rechazo \(H_0\)
-
-  Dado que el p-value \textgreater{} 0.05 para \(|R_1 - R_3|\)
-  \(\implies\) No Rechazo \(H_0\)
+  \(\text{Rechazar } H_0 \text{ si } |R_i - R_j| \ge z_{1 - \frac{\alpha}{k(k-1)}} \left[ \frac{N(N+1)}{12} \left( \frac{1}{n_i} + \frac{1}{n_j} \right) \right]^{1/2}. \ Con \ i < j \  \ \forall i,j=\overline{1,4}\)
+\item
+  Dado que el p-value \textless{} 0.05 para \(|R_1 - R_2|\),
+  \(|R_1 - R_4|\), \(|R_2 - R_3|\) y \(|R_2 - R_4|\) \(\implies\)
+  Rechazo \(H_0\)
+\item
+  Dado que el p-value \textgreater{} 0.05 para \(|R_1 - R_3|\) y
+  \(|R_3 - R_4|\) \(\implies\) No Rechazo \(H_0\)
 \end{itemize}
 
 \end{document}

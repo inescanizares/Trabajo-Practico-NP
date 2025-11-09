@@ -248,8 +248,7 @@ kable(
 ```
 
 
-Los resultados del test de Kruskal–Wallis indicaron una diferencia significativa entre los grupos. Se concluye que se rechaza la hipótesis nula de igualdad de medianas, esto  confirma que las condiciones de cultivo y la inclusión de los compuestos antifibrogénicos modifican de manera significativa la tendencia central de la actividad fibrogénica de las HSC. 
-
+Los resultados del test de Kruskal–Wallis mostraron diferencias significativas entre los grupos, lo que indica que se rechaza la hipótesis nula de igualdad de medianas. Esto sugiere que las condiciones de cultivo y la presencia de compuestos antifibrogénicos influyen de manera significativa en la actividad fibrogénica de las HSC. 
 Para identificar qué tratamientos difieren entre sí después de rechazar la hipótesis nula de Kruskal-Wallis, se realizaron comparaciones múltiples por pares mediante la prueba de Dunn con ajuste de Holm. El objetivo fue determinar cuáles pares de condiciones presentaban una mediana de producción de colágeno significativamente diferente.  
 
 ```{r}
@@ -322,67 +321,6 @@ Finalmente, la prueba de Levene mostró diferencias significativas en la variabi
 
 En síntesis, los resultados obtenidos confirman de manera clara la hipótesis principal del estudio: la combinación de MA presenta un alto potencial antifibrogénico en las Células Estelares Hepáticas. 
 
-Incluso bajo condiciones diseñadas para inducir una fuerte producción de colágeno (SFB 10%), la presencia de los compuestos Metformina y Acido Lipoico logró reducir notablemente su acumulación. En el grupo SFB 10%+MA, la cantidad de colágeno fue menor no solo que en las células activadas, sino también que en el grupo control (SFB 1%). Este hallazgo demuestra que el tratamiento puede no solo detener el daño, sino también revertir parcialmente la activación celular. Además, la baja variabilidad observada en este grupo sugiere que el efecto reductor de Metformina y Ácido Lipoico es consistente y predecible, lo cual es una característica deseable para cualquier enfoque terapéutico. 
+Incluso bajo condiciones diseñadas para inducir una fuerte producción de colágeno (SFB 10%), la presencia de los compuestos Metformina y Ácido Lipoico logró reducir notablemente su acumulación. En el grupo SFB 10%+MA, la cantidad de colágeno fue significativamente diferente de la del control (SFB 1%); al observar la mediana, esta cantidad fue menor no solo que en las células activadas, sino también que en el grupo SFB 1%+MA. Este hallazgo demuestra que el tratamiento puede no solo detener el daño, sino también revertir parcialmente la activación celular. El efecto inhibidor se demuestra robusto, ya que la producción de colágeno en SFB 10%+MA no fue significativamente diferente de la observada en SFB 1%+MA, lo que sugiere una estabilización en niveles bajos independientemente de la activación inicial. Además, la baja variabilidad observada en este grupo sugiere que el efecto reductor de Metformina y Ácido Lipoico es consistente y predecible, lo cual es una característica deseable para cualquier enfoque terapéutico.
 
 En conclusión, la combinación de Metformina y Ácido Lipóico surge como una estrategia prometedora para el tratamiento de la fibrosis hepática, ya que combina una fuerte reducción en la producción de colágeno con una respuesta celular estable. Estos resultados experimentales respaldan la necesidad de continuar con estudios adicionales que evalúen su seguridad y eficacia, abriendo la posibilidad de nuevas alternativas para prevenir o tratar la enfermedad hepática avanzada y el carcinoma hepatocelular (HCC).
-
-# Anexo
-
-## Prueba de Normalidad para las muestras - Test de bondad de ajuste de Lilliefors
-
-- Hipótesis: $H_0) \ X_i \sim Normal \ \ \text{vs} \ \ H_1) \ X_i \nsim Normal$
-
-  Con $X_i$: muestra aleatoria del tratamiento $i$-esimo. $i = \overline{1,4}$
-  
-  En particular se realizaron 4 test de normalidad para los distintos tratamientos.
-  
-- Estadística: $L_n = máx_x |S_n(X_i) - F_o(X_i)|$, mide la maxima diferencia entre la función de distribución acumulada empirica contra la funcion de distribución normal. 
-  
-- Regla de decisión: $\text{Rechazo } H_0 \text{ si} \ L \ge L_{1 - \alpha}$
-  Dado que el p-value > 0.05 $\implies$ No Rechazo $H_0$ en los 4 test realizados.
-  
-## Estudio sobre la homogeneidad de varianzas - Test de igualdad de variancias de Levene
-  
-- Hipótesis: $H_0) \sigma_1^2 = \sigma_2^2 = \sigma_3^2 \ \ \text{vs} \ \ H_1) \text{Al menos un } \sigma_i^2 \text{ distinto del resto } i=\overline{1,3}$
- 
-  Con $\sigma_i^2$: variancia de la Superficie de Colágeno sobre Superficie Celular en el tratamiento $i$-esimo. $i = \overline{1,3}$
-  
-  Se aplica una transformación de la variable $Z = |Y_{ij} - \overline{Y}_{i.}|$
-    
-- Estadística: $F = \frac{CM_{trat}}{CM_{error}}$, se basa en realizar un ANOVA sobre los valores absolutos de los residuos.
-  
-    
-- Regla de decisión: $\text{Rechazo } H_0 \text{ si} \ F_{obs} \geq F_{3, 81, 1 - \alpha}$
-  Dado que el p-value < 0.05 $\implies$ Rechazo $H_0$.
-
-
-## Condiciones de mayor y menor producción en promedio - Test de Kruskal–Wallis
-  
-- Hipótesis: $H_0) \eta_1 = \eta_2 = \eta_3 \ \ \text{vs} \ \ H_1) \text{Al menos un } \eta_i \text{ distinto del resto } i=\overline{1,3}$
-
-  Con $\eta_i$: mediana de la Superficie de Colágeno sobre Superficie Celular en el tratamiento $i$-esimo. $i = \overline{1,3}$
-  
-  La estadística se basa en el empleo de rangos en lugar de las
-observaciones originales.
-  
-  Se ordena de menor a mayor los valores de la muestra combinada.
-    
-- Estadística: $H = \frac{12}{N(N+1)} \sum_{i=1}^{k} \frac{R_i^2}{n_i} - 3(N+1)$
-  
-  Con $R_i = \sum_{j=1}^{n_i}r_{ij}$ suma de rangos de cada muestra.
-    
-- Regla de decisión: $\text{Rechazo } H_0 \text{ si} \ h_{obs} \geq \chi_{3, 1 - \alpha}^2$
-  
-  Dado que el p-value < 0.05 $\implies$ Rechazo $H_0$.
-
-##  Comparación de tratamientos con el grupo control (SFB1%) por pares (Dunn-Holm)
-  
-- Hipótesis: $H_0) \eta_1 = \eta_i \ \ \text{vs} \ \ H_1) \eta_1 \neq \eta_i \ \forall i=\overline{2,4}$
-
-  Con $\eta_i$: mediana de la Superficie de Colágeno sobre Superficie Celular en el tratamiento $i$-esimo. $i = \overline{1,4}$
-    
-- Regla de decisión: $\text{Rechazar } H_0 \text{ si } |R_1 - R_i| \ge z_{1 - \frac{\alpha}{2(k-1)}} \left[ \frac{N(N+1)}{12} \left( \frac{1}{n_1} + \frac{1}{n_i} \right) \right]^{1/2}. \ Con \ i =\overline{2,4}$
-  
-  Dado que el p-value < 0.05 para $|R_1 - R_2|$ y $|R_1 - R_4|$ $\implies$ Rechazo $H_0$
-  
-  Dado que el p-value > 0.05 para $|R_1 - R_3|$ $\implies$ No Rechazo $H_0$
