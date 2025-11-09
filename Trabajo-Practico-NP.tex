@@ -478,52 +478,53 @@ Lilliefors}\label{prueba-de-normalidad-para-las-muestras---test-de-bondad-de-aju
 
 \begin{itemize}
 \item
-  Hipótesis:
-  \(H_0) \ X_i \sim Normal \ \ \text{vs} \ \ H_1) \ X_i \nsim Normal\)
+  \textbf{Hipótesis:}\\
+  \(H_0) X_i \sim \text{Normal}\) vs.~\(H_1) X_i \nsim \text{Normal}\)
 
-  Con \(X_i\): muestra aleatoria del tratamiento \(i\)-esimo.
-  \(i = \overline{1,4}\)
-
-  En particular se realizaron 4 test de normalidad para los distintos
-  tratamientos.
+  Con \(X_i\): muestra aleatoria del tratamiento \(i\)-ésimo, con
+  \(i = \overline{1,4}\).\\
+  En particular, se realizaron cuatro test de normalidad para los
+  distintos tratamientos.
 \item
-  Estadística: \(L_n = máx_x |S_n(X_i) - F_o(X_i)|\), mide la maxima
-  diferencia entre la función de distribución acumulada empirica contra
-  la funcion de distribución normal.
+  \textbf{Estadística:}\\
+  \(L_n = \max_x |S_n(X_i) - F_0(X_i)|\), mide la máxima diferencia
+  entre la función de distribución acumulada empírica y la función de
+  distribución normal.
 \item
-  Regla de decisión:
-  \(\text{Rechazo } H_0 \text{ si} \ L \ge L_{1 - \alpha}\)
+  \textbf{Regla de decisión:}\\
+  Rechazo \(H_0\) si \(L \ge L_{1 - \alpha}\).
 \item
-  Dado que
-  \(L_n = 0.143 \text{ (SFB1%),} 0.145 \text{ (SFB10%),} 0.122 \text{ (SFB1%+MA),} 0.127 \text{ (SFB10%+MA)}
-  \) y el p-value \textgreater{} 0.05 \(\implies\) No Rechazo \(H_0\) en
-  los 4 test realizados.
+  Dado que \(L_n = 0.143\) (SFB1\%), \(0.145\) (SFB10\%), \(0.122\)
+  (SFB1\%+MA) y \(0.127\) (SFB10\%+MA), y el valor \(p > 0.05\), se
+  concluye que \textbf{no se rechaza \(H_0\)} en los cuatro test
+  realizados.
 \end{itemize}
 
 \subsection{Estudio sobre la homogeneidad de varianzas - Test de
-igualdad de variancias de
-Levene}\label{estudio-sobre-la-homogeneidad-de-varianzas---test-de-igualdad-de-variancias-de-levene}
+igualdad de varianzas de
+Levene}\label{estudio-sobre-la-homogeneidad-de-varianzas---test-de-igualdad-de-varianzas-de-levene}
 
 \begin{itemize}
 \item
-  Hipótesis:
-  \(H_0) \sigma_1^2 = \sigma_2^2 = \sigma_3^2 \ \ \text{vs} \ \ H_1) \text{Al menos un } \sigma_i^2 \text{ distinto del resto } i=\overline{1,3}\)
+  \textbf{Hipótesis:}\\
+  \(H_0) \sigma_1^2 = \sigma_2^2 = \sigma_3^2\) vs.~\(H_1)\) al menos
+  una \(\sigma_i^2\) distinta del resto, con \(i = \overline{1,3}\).
 
-  Con \(\sigma_i^2\): variancia de la Superficie de Colágeno sobre
-  Superficie Celular en el tratamiento \(i\)-esimo.
-  \(i = \overline{1,3}\)
+  Con \(\sigma_i^2\): varianza de la Superficie de Colágeno sobre
+  Superficie Celular en el tratamiento \(i\)-ésimo.
 
   Se aplica una transformación de la variable
-  \(Z = |Y_{ij} - \overline{Y}_{i.}|\)
+  \(Z = |Y_{ij} - \overline{Y}_{i.}|\).
 \item
-  Estadística: \(F = \frac{CM_{trat}}{CM_{error}}\), se basa en realizar
-  un ANOVA sobre los valores absolutos de los residuos.
+  \textbf{Estadística:}\\
+  \(F = \dfrac{CM_{\text{trat}}}{CM_{\text{error}}}\), basada en
+  realizar un ANOVA sobre los valores absolutos de los residuos.
 \item
-  Regla de decisión:
-  \(\text{Rechazo } H_0 \text{ si} \ F_{obs} \geq F_{3, 81, 1 - \alpha}\)
+  \textbf{Regla de decisión:}\\
+  Rechazo \(H_0\) si \(F_{\text{obs}} \ge F_{3, 81, 1 - \alpha}\).
 \item
-  Dado que \(F = 13.289\) y el p-value \textless{} 0.05 \(\implies\)
-  Rechazo \(H_0\).
+  Dado que \(F = 13.289\) y el valor \(p < 0.05\), se concluye que
+  \textbf{se rechaza \(H_0\)}.
 \end{itemize}
 
 \subsection{Condiciones de mayor y menor producción en promedio - Test
@@ -532,27 +533,27 @@ Kruskal--Wallis}\label{condiciones-de-mayor-y-menor-producciuxf3n-en-promedio---
 
 \begin{itemize}
 \item
-  Hipótesis:
-  \(H_0) \eta_1 = \eta_2 = \eta_3 \ \ \text{vs} \ \ H_1) \text{Al menos un } \eta_i \text{ distinto del resto } i=\overline{1,3}\)
+  \textbf{Hipótesis:}\\
+  \(H_0) \eta_1 = \eta_2 = \eta_3\) vs.~\(H_1)\) al menos una mediana
+  distinta, con \(i = \overline{1,3}\).
 
   Con \(\eta_i\): mediana de la Superficie de Colágeno sobre Superficie
-  Celular en el tratamiento \(i\)-esimo. \(i = \overline{1,3}\)
+  Celular en el tratamiento \(i\)-ésimo.
 
   La estadística se basa en el empleo de rangos en lugar de las
-  observaciones originales.
-
-  Se ordena de menor a mayor los valores de la muestra combinada.
+  observaciones originales.\\
+  Se ordenan de menor a mayor los valores de la muestra combinada.
 \item
-  Estadística:
-  \(H = \frac{12}{N(N+1)} \sum_{i=1}^{k} \frac{R_i^2}{n_i} - 3(N+1)\)
-
-  Con \(R_i = \sum_{j=1}^{n_i}r_{ij}\) suma de rangos de cada muestra.
+  \textbf{Estadística:}\\
+  \(H = \dfrac{12}{N(N+1)} \sum_{i=1}^{k} \dfrac{R_i^2}{n_i} - 3(N+1)\),\\
+  donde \(R_i = \sum_{j=1}^{n_i} r_{ij}\) representa la suma de rangos
+  de cada muestra.
 \item
-  Regla de decisión:
-  \(\text{Rechazo } H_0 \text{ si} \ h_{obs} \geq \chi_{3, 1 - \alpha}^2\)
+  \textbf{Regla de decisión:}\\
+  Rechazo \(H_0\) si \(H_{\text{obs}} \ge \chi^2_{3, 1 - \alpha}\).
 \item
-  Dado que \(H = 37.9\) y el p-value \textless{} 0.05 \(\implies\)
-  Rechazo \(H_0\).
+  Dado que \(H = 37.9\) y el valor \(p < 0.05\), se concluye que
+  \textbf{se rechaza \(H_0\)}.
 \end{itemize}
 
 \subsection{Comparación de todos los tratamientos por pares
@@ -560,21 +561,24 @@ Kruskal--Wallis}\label{condiciones-de-mayor-y-menor-producciuxf3n-en-promedio---
 
 \begin{itemize}
 \item
-  Hipótesis:
-  \(H_0) \eta_i = \eta_j \ \ \text{vs} \ \ H_1) \eta_i \neq \eta_j \ \forall i < j \  \ \forall i,j=\overline{1,4}\)
+  \textbf{Hipótesis:}\\
+  \(H_0) \eta_i = \eta_j\) vs.~\(H_1) \eta_i \ne \eta_j\), para todo
+  \(i < j\) y \(i,j = \overline{1,4}\).
 
   Con \(\eta_i\): mediana de la Superficie de Colágeno sobre Superficie
-  Celular en el tratamiento \(i\)-esimo. \(i = \overline{1,4}\)
+  Celular en el tratamiento \(i\)-ésimo.
 \item
-  Regla de decisión:
-  \(\text{Rechazar } H_0 \text{ si } |R_i - R_j| \ge z_{1 - \frac{\alpha}{k(k-1)}} \left[ \frac{N(N+1)}{12} \left( \frac{1}{n_i} + \frac{1}{n_j} \right) \right]^{1/2}. \ Con \ i < j \  \ \forall i,j=\overline{1,4}\)
+  \textbf{Regla de decisión:}\\
+  Rechazo \(H_0\) si\\
+  \(|R_i - R_j| \ge z_{1 - \frac{\alpha}{k(k-1)}} \left[ \dfrac{N(N+1)}{12} \left( \dfrac{1}{n_i} + \dfrac{1}{n_j} \right) \right]^{1/2}\),\\
+  con \(i < j\) y \(i,j = \overline{1,4}\).
 \item
-  Dado que el p-value \textless{} 0.05 para \(|R_1 - R_2|\),
-  \(|R_1 - R_4|\), \(|R_2 - R_3|\) y \(|R_2 - R_4|\) \(\implies\)
-  Rechazo \(H_0\)
+  Dado que \(p < 0.05\) para \(|R_1 - R_2|\), \(|R_1 - R_4|\),
+  \(|R_2 - R_3|\) y \(|R_2 - R_4|\), se concluye que \textbf{se rechaza
+  \(H_0\)} en esas comparaciones.
 \item
-  Dado que el p-value \textgreater{} 0.05 para \(|R_1 - R_3|\) y
-  \(|R_3 - R_4|\) \(\implies\) No Rechazo \(H_0\)
+  Dado que \(p > 0.05\) para \(|R_1 - R_3|\) y \(|R_3 - R_4|\), se
+  concluye que \textbf{no se rechaza \(H_0\)}.
 \end{itemize}
 
 \end{document}
