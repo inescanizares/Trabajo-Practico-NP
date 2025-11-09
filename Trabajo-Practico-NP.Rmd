@@ -321,7 +321,7 @@ Finalmente, la prueba de Levene mostró diferencias significativas en la variabi
 
 En síntesis, los resultados obtenidos confirman de manera clara la hipótesis principal del estudio: la combinación de MA presenta un alto potencial antifibrogénico en las Células Estelares Hepáticas. 
 
-Incluso bajo condiciones diseñadas para inducir una fuerte producción de colágeno (SFB 10%), la presencia de los compuestos Metformina y Ácido Lipoico logró reducir notablemente su acumulación. En el grupo SFB 10%+MA, la cantidad de colágeno fue significativamente diferente de la del control (SFB 1%); al observar la mediana, esta cantidad fue menor no solo que en las células activadas, sino también que en el grupo SFB 1%+MA. Este hallazgo demuestra que el tratamiento puede no solo detener el daño, sino también revertir parcialmente la activación celular. El efecto inhibidor se demuestra robusto, ya que la producción de colágeno en SFB 10%+MA no fue significativamente diferente de la observada en SFB 1%+MA, lo que sugiere una estabilización en niveles bajos independientemente de la activación inicial. Además, la baja variabilidad observada en este grupo sugiere que el efecto reductor de Metformina y Ácido Lipoico es consistente y predecible, lo cual es una característica deseable para cualquier enfoque terapéutico.
+Incluso bajo condiciones diseñadas para inducir una fuerte producción de colágeno (SFB 10%), la presencia de los compuestos Metformina y Ácido Lipoico logró reducir notablemente su acumulación. En el grupo SFB 10%+MA, la cantidad de colágeno fue significativamente diferente de la del control (SFB 1%); al observar la mediana, esta cantidad fue menor no solo que en las células activadas, sino también en el grupo SFB 1%+MA. Este hallazgo demuestra que el tratamiento puede no solo detener el daño, sino también reducir parcialmente la activación celular. El efecto inhibidor se demuestra robusto, ya que la producción de colágeno en SFB 10%+MA no fue significativamente diferente de la observada en SFB 1%+MA, lo que sugiere una estabilización en niveles bajos independientemente de la activación inicial. Además, la baja variabilidad observada en este grupo sugiere que el efecto reductor de Metformina y Ácido Lipoico es consistente y predecible, lo cual es una característica deseable para cualquier enfoque terapéutico.
 
 En conclusión, la combinación de Metformina y Ácido Lipóico surge como una estrategia prometedora para el tratamiento de la fibrosis hepática, ya que combina una fuerte reducción en la producción de colágeno con una respuesta celular estable. Estos resultados experimentales respaldan la necesidad de continuar con estudios adicionales que evalúen su seguridad y eficacia, abriendo la posibilidad de nuevas alternativas para prevenir o tratar la enfermedad hepática avanzada y el carcinoma hepatocelular (HCC).
 
@@ -390,9 +390,7 @@ En conclusión, la combinación de Metformina y Ácido Lipóico surge como una e
   Con $\eta_i$: mediana de la Superficie de Colágeno sobre Superficie Celular en el tratamiento $i$-ésimo.
     
 - **Regla de decisión:**  
-  Rechazo $H_0$ si  
-  $|R_i - R_j| \ge z_{1 - \frac{\alpha}{k(k-1)}} \left[ \dfrac{N(N+1)}{12} \left( \dfrac{1}{n_i} + \dfrac{1}{n_j} \right) \right]^{1/2}$,  
-  con $i < j$ y $i,j = \overline{1,4}$.
+  Rechazo $H_0$ si $|R_i - R_j| \ge z_{1 - \frac{\alpha}{k(k-1)}} \left[ \dfrac{N(N+1)}{12} \left( \dfrac{1}{n_i} + \dfrac{1}{n_j} \right) \right]^{1/2}$, con $i < j$ y $i,j = \overline{1,4}$.
   
 - Dado que $p < 0.05$ para $|R_1 - R_2|$, $|R_1 - R_4|$, $|R_2 - R_3|$ y $|R_2 - R_4|$, se concluye que **se rechaza $H_0$** en esas comparaciones.  
   
